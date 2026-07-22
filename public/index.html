@@ -327,6 +327,7 @@
     font-size:12.5px; color:rgba(255,255,255,0.55); font-family:'IBM Plex Mono', monospace;
   }
 </style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 
@@ -351,7 +352,10 @@
           <button type="button" class="lang-btn" data-lang="en">EN</button>
         </div>
         <a class="btn btn-primary btn-sm" href="#contact" data-en="Request a Quote">取得報價</a>
-        <span class="mobile-menu" data-en="Menu">選單</span>
+        <button type="button" class="mobile-menu" aria-label="開啟選單">
+          <span class="mobile-menu-label" data-en="Menu">選單</span>
+          <span class="mobile-menu-icon" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
   </div>
@@ -620,6 +624,7 @@
       if(saved === 'en'){ setLang('en'); }
     })();
   </script>
+  <script src="assets/site.js"></script>
 
 </body>
 </html>
