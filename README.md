@@ -55,6 +55,22 @@ Port 465 通常搭配 `SMTP_SECURE=true`；587 通常搭配 `false` 並由 START
 4. 從網站送一筆測試詢價，確認收件匣與 Reply-To。
 5. 將正式網域指向 Vercel，再確認寄件網域的 SPF / DKIM / DMARC。
 
+## Cloudflare Turnstile
+
+The contact form requires Cloudflare Turnstile in both the browser and the server. Create a production widget in the Cloudflare dashboard, restrict it to the production hostnames, and add these variables to Vercel:
+
+```dotenv
+TURNSTILE_SITE_KEY=your-public-site-key
+TURNSTILE_SECRET=your-secret-key
+TURNSTILE_ALLOWED_HOSTNAMES=epotek-site-private.vercel.app,www.example.com
+```
+
+The browser receives only the public site key. `/api/contact` validates every single-use token with Cloudflare Siteverify before it sends email. Use Cloudflare's official dummy keys only for local or automated testing.
+
+## GitHub to Vercel
+
+Vercel 原生 Git integration 已連接 GitHub repository。推送至 `master` 時會自動建立 Production deployment；其他 branch 與 pull request 則建立 Preview deployment，不需要 GitHub Actions 或 Vercel CLI token。
+
 ## API behavior
 
 - 使用 Zod 驗證姓名、Email、需求說明與長度。

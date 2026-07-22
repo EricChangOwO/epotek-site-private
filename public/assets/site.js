@@ -1,4 +1,26 @@
 (function(){
+  var turnstileLoader;
+
+  function loadTurnstile(){
+    if(window.turnstile) return Promise.resolve(window.turnstile);
+    if(turnstileLoader) return turnstileLoader;
+
+    turnstileLoader = new Promise(function(resolve, reject){
+      var script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.onload = function(){
+        if(window.turnstile) resolve(window.turnstile);
+        else reject(new Error('Turnstile did not initialize.'));
+      };
+      script.onerror = function(){ reject(new Error('Unable to load Turnstile.')); };
+      document.head.appendChild(script);
+    });
+
+    return turnstileLoader;
+  }
+
   function setupNavigation(nav, navIndex){
     var menu = nav.querySelector('.mobile-menu');
     var links = nav.querySelector('.nav-links');
@@ -96,10 +118,90 @@
     status.setAttribute('aria-live', 'polite');
     form.appendChild(status);
 
+    var turnstileContainer = document.createElement('div');
+    turnstileContainer.className = 'turnstile-container cf-turnstile';
+    turnstileContainer.setAttribute('data-action', 'turnstile-spin-v2');
+    form.insertBefore(turnstileContainer, submit);
+
+    var turnstileNotice = document.createElement('p');
+    turnstileNotice.className = 'turnstile-notice';
+    form.insertBefore(turnstileNotice, submit);
+
+    var turnstileToken = '';
+    var turnstileWidgetId = null;
+    var verificationState = 'loading';
+    submit.disabled = true;
+
+    function updateVerificationNotice(state){
+      verificationState = state;
+      var isEnglish = document.documentElement.lang === 'en';
+      var messages = {
+        loading: isEnglish ? 'Loading verification…' : '載入人機驗證中…',
+        ready: isEnglish ? 'Complete the verification before submitting.' : '請先完成人機驗證。',
+        verified: isEnglish ? 'Verification complete.' : '人機驗證已完成。',
+        expired: isEnglish ? 'Verification expired. Please try again.' : '驗證已過期，請重新完成。',
+        error: isEnglish ? 'Verification is unavailable. Please try again later.' : '人機驗證暫時無法使用，請稍後再試。'
+      };
+      turnstileNotice.textContent = messages[state] || '';
+      turnstileNotice.className = 'turnstile-notice' + (state === 'error' || state === 'expired' ? ' is-error' : '');
+    }
+
+    async function initializeTurnstile(){
+      updateVerificationNotice('loading');
+      try{
+        var configResponse = await fetch('/api/contact', {
+          method:'GET',
+          headers:{'Accept':'application/json'},
+          cache:'no-store'
+        });
+        var config = await configResponse.json().catch(function(){ return {}; });
+        if(!configResponse.ok || !config.siteKey) throw new Error('Turnstile is not configured.');
+        turnstileContainer.setAttribute('data-sitekey', config.siteKey);
+
+        var turnstile = await loadTurnstile();
+        turnstileWidgetId = turnstile.render(turnstileContainer, {
+          sitekey:config.siteKey,
+          theme:'dark',
+          size:'flexible',
+          action:'turnstile-spin-v2',
+          'response-field':false,
+          callback:function(token){
+            turnstileToken = token;
+            submit.disabled = false;
+            updateVerificationNotice('verified');
+          },
+          'expired-callback':function(){
+            turnstileToken = '';
+            submit.disabled = true;
+            updateVerificationNotice('expired');
+          },
+          'error-callback':function(){
+            turnstileToken = '';
+            submit.disabled = true;
+            updateVerificationNotice('error');
+          }
+        });
+        updateVerificationNotice('ready');
+      }catch(error){
+        submit.disabled = true;
+        updateVerificationNotice('error');
+      }
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(function(button){
+      button.addEventListener('click', function(){
+        updateVerificationNotice(verificationState);
+      });
+    });
+
     form.removeAttribute('onsubmit');
     form.addEventListener('submit', async function(event){
       event.preventDefault();
       if(!form.reportValidity()) return;
+      if(!turnstileToken){
+        updateVerificationNotice('ready');
+        return;
+      }
 
       var isEnglish = document.documentElement.lang === 'en';
       var originalLabel = submit.innerHTML;
@@ -119,6 +221,7 @@
             email:email.value,
             message:message.value,
             website:form.querySelector('[name="website"]').value,
+            turnstileToken:turnstileToken,
             language:isEnglish ? 'en' : 'zh-Hant',
             source:window.location.href
           })
@@ -133,11 +236,18 @@
         status.className = 'form-status is-error';
         status.textContent = error && error.message ? error.message : (isEnglish ? 'Please try again later.' : '請稍後再試。');
       }finally{
-        submit.disabled = false;
+        turnstileToken = '';
+        if(turnstileWidgetId !== null && window.turnstile){
+          window.turnstile.reset(turnstileWidgetId);
+          updateVerificationNotice('ready');
+        }
+        submit.disabled = true;
         submit.removeAttribute('aria-busy');
         submit.innerHTML = originalLabel;
       }
     });
+
+    initializeTurnstile();
   }
 
   document.querySelectorAll('.nav').forEach(setupNavigation);

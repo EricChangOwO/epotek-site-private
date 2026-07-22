@@ -10,6 +10,7 @@ const inquirySchema = z.object({
   message: z.string().trim().min(10, "需求說明至少需要 10 個字").max(4000),
   source: z.string().trim().max(300).optional(),
   language: z.enum(["zh-Hant", "en"]).default("zh-Hant"),
+  turnstileToken: z.string().min(1, "Verification required").max(2048),
   website: z.string().max(0, "Spam detected").optional().default("")
 });
 
@@ -18,6 +19,13 @@ type Inquiry = z.infer<typeof inquirySchema>;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const rateLimits = new Map<string, number[]>();
+
+type TurnstileResult = {
+  success: boolean;
+  hostname?: string;
+  action?: string;
+  "error-codes"?: string[];
+};
 
 function getClientIp(request: Request) {
   return (
@@ -41,6 +49,67 @@ function isRateLimited(key: string) {
   recent.push(now);
   rateLimits.set(key, recent);
   return false;
+}
+
+async function verifyTurnstile(token: string, remoteIp: string) {
+  const secret = process.env.TURNSTILE_SECRET;
+  if (!secret) {
+    console.error("TURNSTILE_SECRET is not configured");
+    return { ok: false as const, status: 503 as const };
+  }
+
+  try {
+    const body = new URLSearchParams({
+      secret,
+      response: token,
+      remoteip: remoteIp === "unknown" ? "" : remoteIp
+    });
+    const response = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body,
+        cache: "no-store",
+        signal: AbortSignal.timeout(8_000)
+      }
+    );
+
+    if (!response.ok) {
+      console.error(`Turnstile Siteverify failed (${response.status})`);
+      return { ok: false as const, status: 503 as const };
+    }
+
+    const result = (await response.json()) as TurnstileResult;
+    const allowedHostnames = (process.env.TURNSTILE_ALLOWED_HOSTNAMES || "")
+      .split(",")
+      .map((hostname) => hostname.trim().toLowerCase())
+      .filter(Boolean);
+    const testing = process.env.TURNSTILE_TESTING === "true";
+    const validHostname =
+      testing ||
+      allowedHostnames.length === 0 ||
+      (Boolean(result.hostname) &&
+        allowedHostnames.includes(result.hostname!.toLowerCase()));
+    const validAction =
+      testing || result.action === "turnstile-spin-v2";
+
+    if (!result.success || !validHostname || !validAction) {
+      console.warn("Turnstile verification rejected", {
+        errorCodes: result["error-codes"] || [],
+        hostname: result.hostname || null,
+        action: result.action || null
+      });
+      return { ok: false as const, status: 403 as const };
+    }
+
+    return { ok: true as const, status: 200 as const };
+  } catch (error) {
+    console.error("Turnstile verification unavailable", error);
+    return { ok: false as const, status: 503 as const };
+  }
 }
 
 function escapeHtml(value: string) {
@@ -138,6 +207,21 @@ async function sendWithSmtp(inquiry: Inquiry) {
   return true;
 }
 
+export async function GET() {
+  const siteKey = process.env.TURNSTILE_SITE_KEY;
+  if (!siteKey) {
+    return Response.json(
+      { ok: false, error: "Turnstile is not configured" },
+      { status: 503, headers: { "Cache-Control": "no-store" } }
+    );
+  }
+
+  return Response.json(
+    { ok: true, siteKey },
+    { headers: { "Cache-Control": "no-store" } }
+  );
+}
+
 export async function POST(request: Request) {
   const contentLength = Number(request.headers.get("content-length") || 0);
   if (contentLength > 20_000) {
@@ -166,6 +250,27 @@ export async function POST(request: Request) {
           : parsed.error.issues[0]?.message || "詢價內容格式不正確。"
       },
       { status: 400 }
+    );
+  }
+
+  const turnstile = await verifyTurnstile(
+    parsed.data.turnstileToken,
+    getClientIp(request)
+  );
+  if (!turnstile.ok) {
+    return Response.json(
+      {
+        ok: false,
+        error:
+          parsed.data.language === "en"
+            ? turnstile.status === 503
+              ? "Verification service is temporarily unavailable. Please try again later."
+              : "Verification failed. Please complete the challenge again."
+            : turnstile.status === 503
+              ? "驗證服務暫時無法使用，請稍後再試。"
+              : "驗證失敗，請重新完成人機驗證。"
+      },
+      { status: turnstile.status }
     );
   }
 
