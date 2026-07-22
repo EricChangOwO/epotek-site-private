@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>昱泰電子 EPOTEK — 網站設計稿</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#F4F6F2;
+    --surface:#FFFFFF;
+    --surface-alt:#EBF0E9;
+    --ink:#131C16;
+    --muted:#57645C;
+    --line:#D7E0D5;
+    --green:#1F6B4A;
+    --green-deep:#0F2E20;
+    --copper:#B5651D;
+    --copper-light:#D98A3D;
+    --radius:2px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important; animation:none !important;}
+  }
+  section, footer{ scroll-margin-top:88px; }
+
+  h1,h2,h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:0;
+    color:var(--green-deep);
+  }
+  a{color:inherit;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
+
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--copper); font-weight:500; margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:""; width:8px; height:8px; background:var(--copper); display:inline-block; flex:none;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(244,246,242,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 0;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:19px; color:var(--green-deep);
+    text-decoration:none;
+  }
+  .logo-mark{
+    width:30px; height:30px; flex:none; position:relative;
+    border:2px solid var(--green-deep); border-radius:3px;
+  }
+  .logo-mark::before, .logo-mark::after{
+    content:""; position:absolute; background:var(--copper);
+  }
+  .logo-mark::before{ width:100%; height:2px; top:9px; left:0; }
+  .logo-mark::after{ width:2px; height:100%; left:14px; top:0; }
+  .logo small{
+    display:block; font-family:'IBM Plex Mono', monospace; font-weight:400; font-size:10.5px;
+    letter-spacing:0.1em; color:var(--muted); margin-top:1px;
+  }
+  .nav-links{
+    display:flex; gap:34px; list-style:none; margin:0; padding:0;
+    font-size:14.5px; font-weight:500;
+  }
+  .nav-links a{ text-decoration:none; color:var(--ink); position:relative; padding-bottom:4px;}
+  .nav-links a::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--copper);
+    transform:scaleX(0); transform-origin:left; transition:transform .2s ease;
+  }
+  .nav-links a:hover::after, .nav-links a:focus-visible::after{ transform:scaleX(1); }
+  .nav-right{ display:flex; align-items:center; gap:20px; }
+  .lang-toggle{
+    display:flex; border:1px solid var(--line); border-radius:2px; overflow:hidden;
+  }
+  .lang-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em;
+    background:transparent; border:none; padding:6px 10px; cursor:pointer; color:var(--muted);
+  }
+  .lang-btn.active{ background:var(--green-deep); color:#fff; }
+  .lang-btn:hover:not(.active){ background:var(--surface-alt); }
+  .nav-tel{ font-family:'IBM Plex Mono', monospace; font-size:13.5px; color:var(--muted); display:none; }
+  @media (min-width:980px){ .nav-tel{display:inline;} }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:14px;
+    padding:11px 20px; border-radius:2px; text-decoration:none; cursor:pointer;
+    border:1px solid transparent; transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn-primary{ background:var(--green-deep); color:#fff; }
+  .btn-primary:hover{ background:var(--green); }
+  .btn-outline{ border-color:var(--ink); color:var(--ink); background:transparent; }
+  .btn-outline:hover{ background:var(--ink); color:#fff; }
+  .btn-sm{ padding:9px 14px; font-size:13px; }
+  .mobile-menu{ display:none; font-family:'IBM Plex Mono', monospace; font-size:13px; border:1px solid var(--line); padding:8px 12px; border-radius:2px; }
+  @media (max-width:780px){
+    .nav-links{ display:none; }
+    .mobile-menu{ display:inline-block; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(31,107,74,0.14) 1px, transparent 1px) 0 0/22px 22px,
+      var(--bg);
+    padding:76px 0 64px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;
+  }
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:48px;} }
+
+  .hero h1{
+    font-size:44px; line-height:1.16; margin-bottom:20px; letter-spacing:-0.015em;
+  }
+  @media (max-width:640px){ .hero h1{font-size:32px;} }
+  .hero p.lead{
+    font-size:16.5px; color:var(--muted); max-width:46ch; margin-bottom:32px;
+  }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:30px; }
+  .trust-line{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--muted);
+    letter-spacing:0.02em; border-top:1px solid var(--line); padding-top:18px;
+  }
+  .trust-line b{ color:var(--green-deep); font-weight:600; }
+
+  /* stack chart */
+  .stack-panel{
+    position:relative; background:var(--surface); border:1px solid var(--line);
+    border-radius:4px; padding:34px 28px 24px;
+  }
+  .stack-panel::before,.stack-panel::after,
+  .stack-panel .c2,.stack-panel .c3{
+    content:""; position:absolute; width:14px; height:14px; border:1.4px solid var(--copper); opacity:.55;
+  }
+  .stack-panel::before{ top:10px; left:10px; border-right:none; border-bottom:none; }
+  .stack-panel::after{ top:10px; right:10px; border-left:none; border-bottom:none; }
+  .stack-panel .c2{ bottom:10px; left:10px; border-right:none; border-top:none; }
+  .stack-panel .c3{ bottom:10px; right:10px; border-left:none; border-top:none; }
+  .stack-title{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:22px; text-align:center;
+  }
+  .stack-chart{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+    height:170px; padding:0 4px; border-bottom:1px solid var(--line);
+  }
+  .stack-col{ display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; flex:1; }
+  .stack-bar{
+    width:100%; max-width:30px; border-radius:2px 2px 0 0;
+    background:repeating-linear-gradient(to bottom, var(--copper) 0 3px, var(--green) 3px 8px);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .stack-labels{ display:flex; justify-content:space-between; gap:10px; margin-top:10px; padding:0 4px; }
+  .stack-labels span{
+    flex:1; text-align:center; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted);
+  }
+  .stack-caption{
+    text-align:center; font-size:12.5px; color:var(--muted); margin-top:18px;
+  }
+
+  /* ---------- Stats ---------- */
+  .stats{ background:var(--green-deep); color:#fff; padding:0; }
+  .stats-grid{
+    display:grid; grid-template-columns:repeat(4,1fr);
+  }
+  @media (max-width:780px){ .stats-grid{grid-template-columns:repeat(2,1fr);} }
+  .stat{
+    padding:38px 28px; border-left:1px solid rgba(255,255,255,0.12);
+  }
+  .stat:first-child{ border-left:none; }
+  @media (max-width:780px){ .stat:nth-child(2n+1){border-left:none;} .stat{border-left:1px solid rgba(255,255,255,0.12); border-top:1px solid rgba(255,255,255,0.12);} .stat:nth-child(1),.stat:nth-child(2){border-top:none;} }
+  .stat b{
+    display:block; font-family:'Space Grotesk', sans-serif; font-size:34px; color:var(--copper-light); margin-bottom:6px;
+  }
+  .stat span{ font-size:13.5px; color:rgba(255,255,255,0.75); }
+
+  /* ---------- Section shell ---------- */
+  section.block{ padding:88px 0; }
+  section.block.alt{ background:var(--surface-alt); }
+  .block-head{ max-width:640px; margin-bottom:52px; }
+  .block-head h2{ font-size:30px; }
+  @media (max-width:640px){ .block-head h2{font-size:25px;} }
+
+  /* ---------- Products ---------- */
+  .product-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  @media (max-width:900px){ .product-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .product-grid{grid-template-columns:1fr;} }
+  .product-card{
+    background:var(--surface); padding:30px 26px; position:relative; transition:background .15s ease;
+    display:block; text-decoration:none; color:inherit; cursor:pointer;
+  }
+  .product-card:hover{ background:#fff; }
+  .product-card:hover .card-tag{ background:var(--copper); color:#fff; }
+  .product-card:focus-visible{ outline:2px solid var(--copper); outline-offset:-2px; z-index:1; position:relative; }
+  .card-corner{
+    position:absolute; top:0; left:0; width:16px; height:16px;
+    border-top:2px solid var(--copper); border-left:2px solid var(--copper);
+  }
+  .card-tag{
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.04em;
+    background:var(--surface-alt); color:var(--green-deep); padding:3px 8px; border-radius:2px; margin-bottom:16px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .product-card h3{ font-size:18px; margin-bottom:4px; }
+  .product-card .en{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--copper); display:block; margin-bottom:12px; letter-spacing:0.03em; }
+  .product-card p{ font-size:14px; color:var(--muted); margin:0 0 16px; }
+  .card-more{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--green); letter-spacing:.04em;
+    opacity:0; transform:translateX(-4px); transition:opacity .15s ease, transform .15s ease;
+  }
+  .product-card:hover .card-more, .product-card:focus-visible .card-more{ opacity:1; transform:translateX(0); }
+
+  /* ---------- About ---------- */
+  .about-lead{ font-size:15.5px; color:var(--muted); max-width:76ch; margin-bottom:44px; }
+  .epotek-acronym{
+    display:flex; flex-wrap:wrap; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .acr-item{
+    flex:1 1 16.66%; text-align:center; padding:22px 10px; border-left:1px solid var(--line);
+  }
+  .acr-item:first-child{ border-left:none; }
+  .acr-letter{
+    display:block; font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:32px; color:var(--green-deep);
+  }
+  .acr-word{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--copper); margin-top:6px;
+  }
+  @media (max-width:640px){
+    .acr-item{ flex-basis:33.33%; border-left:none; border-top:1px solid var(--line); }
+    .acr-item:nth-child(3n+1){ border-left:none; }
+  }
+
+  /* ---------- Capability ---------- */
+  .cap-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:40px; }
+  @media (max-width:860px){ .cap-grid{grid-template-columns:1fr;} }
+  .cap-item{ border-top:2px solid var(--green-deep); padding-top:20px; }
+  .cap-num{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--copper); display:block; margin-bottom:10px; }
+  .cap-item h3{ font-size:18px; margin-bottom:10px; }
+  .cap-item p{ font-size:14.5px; color:var(--muted); margin:0; }
+
+  /* ---------- Industries ---------- */
+  .chip-row{ display:flex; flex-wrap:wrap; gap:12px; }
+  .chip{
+    font-family:'IBM Plex Mono', monospace; font-size:13.5px; padding:10px 18px;
+    border:1px solid var(--line); border-radius:20px; background:var(--surface); color:var(--ink);
+  }
+
+  /* ---------- Quality ---------- */
+  .quality-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:start; }
+  @media (max-width:860px){ .quality-grid{grid-template-columns:1fr;} }
+  .quality-grid p{ font-size:15px; color:var(--muted); max-width:52ch; }
+  .timeline{ border-left:2px solid var(--line); padding-left:24px; display:flex; flex-direction:column; gap:26px; }
+  .tl-item{ position:relative; }
+  .tl-item::before{
+    content:""; position:absolute; left:-29px; top:4px; width:10px; height:10px; border-radius:50%;
+    background:var(--copper); border:2px solid var(--bg);
+  }
+  .tl-item b{ display:block; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--green); margin-bottom:4px; }
+  .tl-item span{ font-size:14px; color:var(--ink); }
+
+  /* ---------- News ---------- */
+  .news-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  @media (max-width:860px){ .news-grid{grid-template-columns:1fr;} }
+  .news-card{ background:var(--surface); border:1px solid var(--line); padding:26px; }
+  .news-date{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--copper); margin-bottom:12px; display:block; }
+  .news-card h3{ font-size:16px; margin-bottom:10px; line-height:1.4; }
+  .news-card p{ font-size:13.5px; color:var(--muted); margin:0; }
+  .news-note{
+    margin-top:22px; font-size:13px; color:var(--muted); font-style:italic;
+  }
+
+  /* ---------- Footer / Contact ---------- */
+  footer.contact{ background:var(--green-deep); color:#fff; padding:80px 0 32px; }
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; margin-bottom:56px; }
+  @media (max-width:860px){ .contact-grid{grid-template-columns:1fr; gap:44px;} }
+  .contact-grid h2{ color:#fff; font-size:26px; margin-bottom:18px; }
+  .contact-info p{ font-size:14.5px; color:rgba(255,255,255,0.78); margin:0 0 8px; }
+  .contact-info .mono{ color:rgba(255,255,255,0.9); }
+  .form-mock{ display:flex; flex-direction:column; gap:12px; }
+  .form-mock input, .form-mock textarea{
+    width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.2);
+    border-radius:2px; padding:12px 14px; color:#fff; font-family:'IBM Plex Sans',sans-serif; font-size:14px;
+  }
+  .form-mock ::placeholder{ color:rgba(255,255,255,0.45); }
+  .form-mock textarea{ resize:none; height:80px; }
+  .form-mock .btn-primary{ background:var(--copper); align-self:flex-start; }
+  .form-mock .btn-primary:hover{ background:var(--copper-light); }
+  .foot-bottom{
+    border-top:1px solid rgba(255,255,255,0.15); padding-top:24px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-size:12.5px; color:rgba(255,255,255,0.55); font-family:'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="wrap nav-inner">
+      <a class="logo" href="#top">
+        <span class="logo-mark"></span>
+        <span data-en="Epotek Electronics<small>EPOTEK ELECTRONICS &middot; SINCE 1980</small>">昱泰電子<small>EPOTEK ELECTRONICS · SINCE 1980</small></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about" data-en="About Us">關於昱泰</a></li>
+        <li><a href="#products" data-en="Products &amp; Process">產品與製程</a></li>
+        <li><a href="#quality" data-en="Quality &amp; Sustainability">品質永續</a></li>
+        <li><a href="#news" data-en="News">最新消息</a></li>
+        <li><a href="#contact" data-en="Contact Us">聯絡我們</a></li>
+      </ul>
+      <div class="nav-right">
+        <span class="nav-tel mono">+886-7-733-7610</span>
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button type="button" class="lang-btn active" data-lang="zh">中文</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </div>
+        <a class="btn btn-primary btn-sm" href="#contact" data-en="Request a Quote">取得報價</a>
+        <span class="mobile-menu" data-en="Menu">選單</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow" data-en="Kaohsiung &middot; Epotek Electronics &middot; Est. 1980">高雄 · 昱泰電子 · 1980年創立</div>
+        <h1 data-en="From 2 to 20 Layers,<br>Your One-Stop PCB Partner">從2層到20層,<br>一站到位的 PCB 製造夥伴</h1>
+        <p class="lead" data-en="For 45 years, Epotek has manufactured Rigid, Flex, Rigid-Flex, and Metal Core PCBs in Kaohsiung — with layout and assembly services to take you from prototype to volume production.">昱泰電子深耕高雄45年,提供剛性板、軟板、軟硬結合板與金屬基板,並整合線路佈局與組裝服務,協助客戶從原型打樣到量產穩定交貨。</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#contact" data-en="Request a Quote">取得報價</a>
+          <a class="btn btn-outline" href="#products" data-en="Download Capability Sheet">下載產品能力表</a>
+        </div>
+        <div class="trust-line" data-en="<b>ISO Certified Factory</b> &middot; <b>RoHS / Halogen-Free Process</b> &middot; Overseas offices: China &middot; India &middot; Japan &middot; UK">
+          <b>ISO認證工廠</b> · <b>RoHS / 無鹵製程</b> · 海外技術據點:中國 · 印度 · 日本 · 英國
+        </div>
+      </div>
+      <div class="stack-panel">
+        <span class="c2"></span><span class="c3"></span>
+        <div class="stack-title" data-en="Rigid PCB Multilayer Capability">Rigid PCB 多層製造能力</div>
+        <div class="stack-chart">
+          <div class="stack-col"><div class="stack-bar" style="height:32px"></div></div>
+          <div class="stack-col"><div class="stack-bar" style="height:46px"></div></div>
+          <div class="stack-col"><div class="stack-bar" style="height:60px"></div></div>
+          <div class="stack-col"><div class="stack-bar" style="height:74px"></div></div>
+          <div class="stack-col"><div class="stack-bar" style="height:110px"></div></div>
+          <div class="stack-col"><div class="stack-bar" style="height:166px"></div></div>
+        </div>
+        <div class="stack-labels">
+          <span data-en="2L">2層</span><span data-en="4L">4層</span><span data-en="6L">6層</span><span data-en="8L">8層</span><span data-en="12L">12層</span><span data-en="20L">20層</span>
+        </div>
+        <div class="stack-caption" data-en="Including 8L / 12L HDI fine-line process">含 8 / 12 層 HDI 細密線路製程</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="wrap stats-grid">
+      <div class="stat"><b data-en='45<span class="mono" style="font-size:16px;">yrs</span>'>45<span class="mono" style="font-size:16px;">年</span></b><span data-en="Founded 1980 &middot; Made in Kaohsiung">1980年成立 · 高雄在地製造</span></div>
+      <div class="stat"><b>ISO</b><span data-en="Certified Factory &middot; Quality Management System">驗證工廠 · 品質管理系統</span></div>
+      <div class="stat"><b>4</b><span data-en="Overseas Offices (China / India / Japan / UK)">海外技術據點(中國 / 印度 / 日本 / 英國)</span></div>
+      <div class="stat"><b>2003</b><span data-en="RoHS Halogen-Free Process Since">導入 RoHS 無鹵製程</span></div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="block alt" id="about">
+    <div class="wrap">
+      <div class="block-head">
+        <div class="eyebrow" data-en="About Us">關於昱泰</div>
+        <h2 data-en="45 Years of PCB Manufacturing Expertise">45年PCB製造專業的累積</h2>
+      </div>
+      <p class="about-lead" data-en="Founded in Kaohsiung in 1980, Epotek has long been a trusted PCB source for leading companies in consumer electronics, computer &amp; peripherals, telecommunications, automotive electronics, and medical equipment &mdash; supplying Rigid, Flex, Rigid-Flex, and Metal Core PCBs, along with layout and assembly services, for a true one-stop solution from prototype to volume production. With manufacturing capacity in both Taiwan and China, and overseas offices in China, India, Japan, and the UK, Epotek delivers responsive technical support wherever our customers are.">昱泰電子自1980年於高雄成立,長期是消費性電子、電腦與週邊設備、通訊、車用電子及醫療器材等領域指標廠商信賴的PCB供應商 — 穩定供應剛性板、軟性板、軟硬結合板與金屬基板,並整合線路佈局與組裝服務,提供從原型打樣到量產的一站式解決方案。昱泰同時具備台灣與中國雙產地供貨能力,並於中國、印度、日本、英國設有海外據點,就近提供技術支援與在地服務。</p>
+      <div class="epotek-acronym">
+        <div class="acr-item"><span class="acr-letter">E</span><span class="acr-word" data-en="Excellent">卓越</span></div>
+        <div class="acr-item"><span class="acr-letter">P</span><span class="acr-word" data-en="Profession">專業</span></div>
+        <div class="acr-item"><span class="acr-letter">O</span><span class="acr-word" data-en="Outstanding">傑出</span></div>
+        <div class="acr-item"><span class="acr-letter">T</span><span class="acr-word" data-en="Technologies">技術</span></div>
+        <div class="acr-item"><span class="acr-letter">E</span><span class="acr-word" data-en="Extraordinary">非凡</span></div>
+        <div class="acr-item"><span class="acr-letter">K</span><span class="acr-word" data-en="Know-how">專業訣竅</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="block" id="products">
+    <div class="wrap">
+      <div class="block-head">
+        <div class="eyebrow" data-en="Products &amp; Services">產品與服務</div>
+        <h2 data-en="Full PCB Product Line">完整 PCB 產品線</h2>
+      </div>
+      <div class="product-grid">
+        <a class="product-card" href="products/rigid-pcb.html">
+          <span class="card-corner"></span>
+          <span class="card-tag">2–20L</span>
+          <h3 data-en="Rigid PCB">剛性板</h3><span class="en">RIGID PCB</span>
+          <p data-en="2&ndash;20 layer manufacturing capability, including 8L / 12L HDI fine-line process for complex board requirements.">2 至 20 層製造能力,含 8 / 12 層 HDI 細密線路,滿足多樣化複雜板材需求。</p>
+          <span class="card-more" data-en="View Details &rarr;">查看詳情 →</span>
+        </a>
+        <a class="product-card" href="products/flex-pcb.html">
+          <span class="card-corner"></span>
+          <span class="card-tag">FLEX</span>
+          <h3 data-en="Flex PCB">軟性板</h3><span class="en">FLEX PCB</span>
+          <p data-en="Reliable flex PCB process for thin, lightweight, and bendable product designs.">因應輕薄化、可撓曲的電子產品設計需求,提供穩定的軟板製程。</p>
+          <span class="card-more" data-en="View Details &rarr;">查看詳情 →</span>
+        </a>
+        <a class="product-card" href="products/rigid-flex-pcb.html">
+          <span class="card-corner"></span>
+          <span class="card-tag">HYBRID</span>
+          <h3 data-en="Rigid-Flex PCB">軟硬結合板</h3><span class="en">RIGID-FLEX PCB</span>
+          <p data-en="Combines rigid structural strength with flex flexibility for composite designs.">結合剛性結構強度與軟板撓曲彈性,適用於複合式結構設計。</p>
+          <span class="card-more" data-en="View Details &rarr;">查看詳情 →</span>
+        </a>
+        <a class="product-card" href="products/metal-core-pcb.html">
+          <span class="card-corner"></span>
+          <span class="card-tag">MCPCB</span>
+          <h3 data-en="Metal Core PCB">金屬基板</h3><span class="en">METAL CORE PCB</span>
+          <p data-en="High thermal conductivity for power components, LED lighting, and other heat-sensitive applications.">高導熱設計,適用於功率元件、LED 照明等散熱要求較高的應用。</p>
+          <span class="card-more" data-en="View Details &rarr;">查看詳情 →</span>
+        </a>
+        <a class="product-card" href="products/pcb-layout.html">
+          <span class="card-corner"></span>
+          <span class="card-tag">DESIGN</span>
+          <h3 data-en="PCB Layout">線路佈局設計</h3><span class="en">PCB LAYOUT</span>
+          <p data-en="Layout design and engineering support to help finalize your design before prototyping.">提供線路設計與工程支援服務,協助客戶完成打樣前的佈局規劃。</p>
+          <span class="card-more" data-en="View Details &rarr;">查看詳情 →</span>
+        </a>
+        <a class="product-card" href="products/pcb-assembly.html">
+          <span class="card-corner"></span>
+          <span class="card-tag">PCBA</span>
+          <h3 data-en="PCB Assembly">組裝代工</h3><span class="en">PCB ASSEMBLY</span>
+          <p data-en="Board fabrication through assembly in one place — trusted partners simplifying your supply chain.">攜手策略夥伴,從板材製造到組裝服務一次到位,簡化供應鏈流程。</p>
+          <span class="card-more" data-en="View Details &rarr;">查看詳情 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITY -->
+  <section class="block alt" id="capability">
+    <div class="wrap">
+      <div class="block-head">
+        <div class="eyebrow" data-en="Process Capability">製程能力</div>
+        <h2 data-en="The Technical Foundation Behind Our Quality">支撐品質的技術基礎</h2>
+      </div>
+      <div class="cap-grid">
+        <div class="cap-item">
+          <span class="cap-num mono">01</span>
+          <h3 data-en="CAM Imaging &amp; Tooling System">CAM 影像製版系統</h3>
+          <p data-en="Built for diverse, high-complexity boards &mdash; improving flexibility and overall competitiveness.">因應多樣化、高複雜度板材需求,提升生產彈性與整體競爭力。</p>
+        </div>
+        <div class="cap-item">
+          <span class="cap-num mono">02</span>
+          <h3 data-en="In-House Vertical Wet Process Line">自主開發垂直濕製程產線</h3>
+          <p data-en="Developed in-house by our engineering team to strengthen fine-line and heavy-copper process stability.">由昱泰技術團隊自行開發建置,強化細線路、厚銅製程的穩定度。</p>
+        </div>
+        <div class="cap-item">
+          <span class="cap-num mono">03</span>
+          <h3 data-en="Precision Process Control">精密製程控制</h3>
+          <p data-en="Advanced capability in fine-line, heavy copper, and impedance control to meet demanding specs.">具備細線路、厚銅、阻抗控制等進階製造能力,滿足嚴苛規格要求。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section class="block">
+    <div class="wrap">
+      <div class="block-head">
+        <div class="eyebrow" data-en="Industries Served">應用產業</div>
+        <h2 data-en="Serving Diverse Industries">客戶橫跨多元領域</h2>
+      </div>
+      <div class="chip-row">
+        <span class="chip" data-en="Consumer Electronics">消費性電子</span>
+        <span class="chip" data-en="Computers &amp; Peripherals">電腦與週邊設備</span>
+        <span class="chip" data-en="Telecommunications">通訊設備</span>
+        <span class="chip" data-en="Automotive Electronics">車用電子</span>
+        <span class="chip" data-en="Traffic Control Systems">交通控制系統</span>
+        <span class="chip" data-en="Medical Equipment">醫療檢測設備</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUALITY -->
+  <section class="block alt" id="quality">
+    <div class="wrap quality-grid">
+      <div>
+        <div class="eyebrow" data-en="Quality &amp; Sustainability">品質與永續</div>
+        <h2 style="margin-bottom:18px;" data-en="Beyond Compliance, Toward Reduction">從合規到主動減量</h2>
+        <p data-en="Epotek doesn't just follow environmental regulations &mdash; we continually improve our processes and equipment to reduce natural resource consumption. Since 2003, we've fully adopted RoHS halogen-free processes, including lead-free and halogen-free product lines, guided by our Green Partner commitment.">昱泰電子不僅遵循環保法規,更持續優化製程與設備,降低天然資源消耗。自2003年起,昱泰已全面導入 RoHS 無鹵製程,涵蓋無鉛與無鹵素產品線,並秉持綠色夥伴精神持續精進。</p>
+      </div>
+      <div class="timeline">
+        <div class="tl-item"><b>2003</b><span data-en="Adopted RoHS halogen-free process; launched lead-free / halogen-free lines">導入 RoHS 無鹵製程,推出無鉛 / 無鹵素產品線</span></div>
+        <div class="tl-item"><b>ISO</b><span data-en="ISO quality management system certified">通過 ISO 品質管理系統認證</span></div>
+        <div class="tl-item"><b data-en="Ongoing">持續</b><span data-en="Green Partner policy &mdash; continuously improving resource efficiency">綠色夥伴政策,持續優化資源使用效率</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="block" id="news">
+    <div class="wrap">
+      <div class="block-head">
+        <div class="eyebrow" data-en="News">最新消息</div>
+        <h2 data-en="Trade Shows &amp; Company Updates">展會動態與公司新聞</h2>
+      </div>
+      <div class="news-grid">
+        <div class="news-card">
+          <span class="news-date" data-en="2026 &middot; Trade Show Update">2026 · 展會快訊</span>
+          <h3 data-en="Epotek Trade Show Update (sample headline)">昱泰電子參展消息(範例標題)</h3>
+          <p data-en="This section highlights recent trade shows, capacity upgrades, or customer partnerships.">此區塊用於刊登近期展會參與、產能升級或客戶合作等最新消息。</p>
+        </div>
+        <div class="news-card">
+          <span class="news-date" data-en="2026 &middot; Company News">2026 · 公司新聞</span>
+          <h3 data-en="Capacity / Equipment Upgrade (sample headline)">產能 / 設備升級公告(範例標題)</h3>
+          <p data-en="Use this space for new equipment or production line updates.">可用於說明新設備導入、產線擴充等營運更新內容。</p>
+        </div>
+        <div class="news-card">
+          <span class="news-date" data-en="2026 &middot; Industry Update">2026 · 產業動態</span>
+          <h3 data-en="Industry Trends &amp; Case Studies (sample headline)">產業趨勢或客戶案例分享(範例標題)</h3>
+          <p data-en="Update regularly to improve search visibility and customer trust.">建議定期更新,強化搜尋引擎能見度與客戶信任感。</p>
+        </div>
+      </div>
+      <p class="news-note" data-en="&#8251; Placeholder content &mdash; replace with Epotek's actual latest news before launch.">※ 以上為版面示意,正式上線前需替換為昱泰目前實際的最新消息內容。</p>
+    </div>
+  </section>
+
+  <!-- CONTACT / FOOTER -->
+  <footer class="contact" id="contact">
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2 data-en="Contact Epotek">聯絡昱泰電子</h2>
+          <p style="margin-bottom:20px; color:rgba(255,255,255,0.85);" data-en="Send us your inquiry &mdash; our sales team will get back to you shortly.">歡迎來信詢價或洽談合作,昱泰電子業務團隊將盡快與您聯繫。</p>
+          <p class="mono">昱泰電子有限公司 EPOTEK ELECTRONICS CO., LTD.</p>
+          <p data-en="No. 103-3, Singnong Ln., Jhongjheng Rd., Niaosong Dist., Kaohsiung City 833, Taiwan">高雄市鳥松區忠正路信農巷103-3號</p>
+          <p class="mono">TEL +886-7-733-7610　FAX +886-7-733-7608</p>
+          <p class="mono">sales@epotek.com.tw</p>
+        </div>
+        <form class="form-mock" onsubmit="return false;">
+          <input type="text" placeholder="姓名" data-en-placeholder="Name">
+          <input type="text" placeholder="公司名稱" data-en-placeholder="Company Name">
+          <input type="email" placeholder="Email" data-en-placeholder="Email">
+          <textarea placeholder="需求說明(如:板材類型、層數、需求數量)" data-en-placeholder="Requirements (e.g. board type, layer count, quantity)"></textarea>
+          <button type="submit" class="btn btn-primary" data-en="Submit Inquiry">送出詢價</button>
+        </form>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 EPOTEK ELECTRONICS CO., LTD. All rights reserved.</span>
+        <span>KAOHSIUNG, TAIWAN</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      var textEls = document.querySelectorAll('[data-en]');
+      textEls.forEach(function(el){ el.dataset.zh = el.innerHTML; });
+
+      var phEls = document.querySelectorAll('[data-en-placeholder]');
+      phEls.forEach(function(el){ el.dataset.zhPlaceholder = el.placeholder; });
+
+      function setLang(lang){
+        textEls.forEach(function(el){
+          el.innerHTML = lang === 'en' ? el.dataset.en : el.dataset.zh;
+        });
+        phEls.forEach(function(el){
+          el.placeholder = lang === 'en' ? el.dataset.enPlaceholder : el.dataset.zhPlaceholder;
+        });
+        document.documentElement.lang = lang === 'en' ? 'en' : 'zh-Hant';
+        document.querySelectorAll('.lang-btn').forEach(function(btn){
+          btn.classList.toggle('active', btn.dataset.lang === lang);
+        });
+        try{ localStorage.setItem('epotek-lang', lang); }catch(e){}
+      }
+
+      document.querySelectorAll('.lang-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){ setLang(btn.dataset.lang); });
+      });
+
+      var saved;
+      try{ saved = localStorage.getItem('epotek-lang'); }catch(e){}
+      if(saved === 'en'){ setLang('en'); }
+    })();
+  </script>
+
+</body>
+</html>

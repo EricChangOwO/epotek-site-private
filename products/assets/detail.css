@@ -1,0 +1,465 @@
+/* ============================================================
+   Epotek — Product Detail Page Shared Styles
+   Reuses the same design tokens / fonts as index.html so every
+   detail page feels like part of the same site.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#F4F6F2;
+  --surface:#FFFFFF;
+  --surface-alt:#EBF0E9;
+  --ink:#131C16;
+  --muted:#57645C;
+  --line:#D7E0D5;
+  --green:#1F6B4A;
+  --green-deep:#0F2E20;
+  --copper:#B5651D;
+  --copper-light:#D98A3D;
+  --radius:2px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{transition:none !important; animation:none !important;}
+}
+section, footer{ scroll-margin-top:88px; }
+
+h1,h2,h3{
+  font-family:'Space Grotesk', sans-serif;
+  font-weight:700;
+  letter-spacing:-0.01em;
+  margin:0;
+  color:var(--green-deep);
+}
+a{color:inherit;}
+.mono{font-family:'IBM Plex Mono', monospace;}
+
+.wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+@media (max-width:640px){.wrap{padding:0 20px;}}
+
+.eyebrow{
+  display:flex; align-items:center; gap:10px;
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--copper); font-weight:500; margin-bottom:14px;
+}
+.eyebrow::before{
+  content:""; width:8px; height:8px; background:var(--copper); display:inline-block; flex:none;
+}
+.eyebrow a{ text-decoration:none; color:var(--copper); }
+.eyebrow a:hover{ text-decoration:underline; }
+.eyebrow .sep{ color:var(--muted); opacity:.6; }
+
+/* ---------- Nav (shared) ---------- */
+.nav{
+  position:sticky; top:0; z-index:50;
+  background:rgba(244,246,242,0.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 0;
+}
+.logo{
+  display:flex; align-items:center; gap:10px;
+  font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:19px; color:var(--green-deep);
+  text-decoration:none;
+}
+.logo-mark{
+  width:30px; height:30px; flex:none; position:relative;
+  border:2px solid var(--green-deep); border-radius:3px;
+}
+.logo-mark::before, .logo-mark::after{
+  content:""; position:absolute; background:var(--copper);
+}
+.logo-mark::before{ width:100%; height:2px; top:9px; left:0; }
+.logo-mark::after{ width:2px; height:100%; left:14px; top:0; }
+.logo small{
+  display:block; font-family:'IBM Plex Mono', monospace; font-weight:400; font-size:10.5px;
+  letter-spacing:0.1em; color:var(--muted); margin-top:1px;
+}
+.nav-links{
+  display:flex; gap:34px; list-style:none; margin:0; padding:0;
+  font-size:14.5px; font-weight:500;
+}
+.nav-links a{ text-decoration:none; color:var(--ink); position:relative; padding-bottom:4px;}
+.nav-links a::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--copper);
+  transform:scaleX(0); transform-origin:left; transition:transform .2s ease;
+}
+.nav-links a:hover::after, .nav-links a:focus-visible::after{ transform:scaleX(1); }
+.nav-right{ display:flex; align-items:center; gap:20px; }
+.lang-toggle{
+  display:flex; border:1px solid var(--line); border-radius:2px; overflow:hidden;
+}
+.lang-btn{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.06em;
+  background:transparent; border:none; padding:6px 10px; cursor:pointer; color:var(--muted);
+}
+.lang-btn.active{ background:var(--green-deep); color:#fff; }
+.lang-btn:hover:not(.active){ background:var(--surface-alt); }
+.nav-tel{ font-family:'IBM Plex Mono', monospace; font-size:13.5px; color:var(--muted); display:none; }
+@media (min-width:980px){ .nav-tel{display:inline;} }
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:14px;
+  padding:11px 20px; border-radius:2px; text-decoration:none; cursor:pointer;
+  border:1px solid transparent; transition:transform .15s ease, background .15s ease;
+}
+.btn:hover{ transform:translateY(-1px); }
+.btn-primary{ background:var(--green-deep); color:#fff; }
+.btn-primary:hover{ background:var(--green); }
+.btn-outline{ border-color:var(--ink); color:var(--ink); background:transparent; }
+.btn-outline:hover{ background:var(--ink); color:#fff; }
+.btn-sm{ padding:9px 14px; font-size:13px; }
+.mobile-menu{ display:none; font-family:'IBM Plex Mono', monospace; font-size:13px; border:1px solid var(--line); padding:8px 12px; border-radius:2px; }
+@media (max-width:780px){
+  .nav-links{ display:none; }
+  .mobile-menu{ display:inline-block; }
+}
+
+/* ---------- Detail hero ---------- */
+.detail-hero{
+  position:relative; overflow:hidden;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(31,107,74,0.14) 1px, transparent 1px) 0 0/22px 22px,
+    var(--bg);
+  padding:52px 0 60px;
+  border-bottom:1px solid var(--line);
+}
+.detail-hero-top{
+  display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:28px; flex-wrap:wrap;
+}
+.back-link{
+  display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.04em; color:var(--muted);
+  border:1px solid var(--line); padding:8px 14px; border-radius:2px; background:var(--surface);
+  transition:border-color .15s ease, color .15s ease;
+}
+.back-link:hover{ border-color:var(--copper); color:var(--copper); }
+.detail-hero-grid{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:52px; align-items:center; }
+@media (max-width:900px){ .detail-hero-grid{grid-template-columns:1fr; gap:40px;} }
+.detail-hero h1{ font-size:40px; line-height:1.16; margin-bottom:6px; letter-spacing:-0.015em; }
+@media (max-width:640px){ .detail-hero h1{font-size:29px;} }
+.detail-hero .en-label{
+  display:block; font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--copper);
+  letter-spacing:0.06em; margin-bottom:18px;
+}
+.detail-hero .lead{ font-size:16px; color:var(--muted); max-width:52ch; margin-bottom:26px; }
+.tag-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
+.card-tag{
+  display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.04em;
+  background:var(--surface-alt); color:var(--green-deep); padding:5px 10px; border-radius:2px;
+}
+.card-tag.hero-tag{ background:var(--green-deep); color:#fff; padding:6px 12px; font-size:12px; }
+
+/* generic small visual frame (reused across all detail pages) */
+.visual-panel{
+  position:relative; background:var(--surface); border:1px solid var(--line);
+  border-radius:4px; padding:30px 26px 22px;
+}
+.visual-panel .c1,.visual-panel .c2,.visual-panel .c3,.visual-panel .c4{
+  content:""; position:absolute; width:14px; height:14px; border:1.4px solid var(--copper); opacity:.55;
+}
+.visual-panel .c1{ top:10px; left:10px; border-right:none; border-bottom:none; }
+.visual-panel .c2{ top:10px; right:10px; border-left:none; border-bottom:none; }
+.visual-panel .c3{ bottom:10px; left:10px; border-right:none; border-top:none; }
+.visual-panel .c4{ bottom:10px; right:10px; border-left:none; border-top:none; }
+.visual-title{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:20px; text-align:center;
+}
+.visual-caption{ text-align:center; font-size:12.5px; color:var(--muted); margin-top:16px; }
+
+/* ---------- Section shell (shared) ---------- */
+section.block{ padding:76px 0; }
+section.block.alt{ background:var(--surface-alt); }
+.block-head{ max-width:680px; margin-bottom:44px; }
+.block-head h2{ font-size:27px; }
+@media (max-width:640px){ .block-head h2{font-size:23px;} }
+.block-head p{ font-size:15px; color:var(--muted); margin-top:12px; max-width:64ch; }
+.note-box{
+  margin-top:28px; padding:16px 20px; border:1px solid var(--line); border-left:3px solid var(--copper);
+  background:var(--surface); border-radius:2px; font-size:13px; color:var(--muted); font-style:italic;
+}
+
+/* ---------- Stack chart (mini, reused from homepage hero) ---------- */
+.stack-chart{
+  display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+  height:170px; padding:0 4px; border-bottom:1px solid var(--line);
+}
+.stack-col{ display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; flex:1; }
+.stack-bar{
+  width:100%; max-width:30px; border-radius:2px 2px 0 0;
+  background:repeating-linear-gradient(to bottom, var(--copper) 0 3px, var(--green) 3px 8px);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05);
+  cursor:pointer; transition:transform .15s ease;
+}
+.stack-bar:hover, .stack-bar.active{ transform:scaleY(1.02); box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05), 0 0 0 2px var(--copper); }
+.stack-labels{ display:flex; justify-content:space-between; gap:10px; margin-top:10px; padding:0 4px; }
+.stack-labels span{
+  flex:1; text-align:center; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted); cursor:pointer;
+}
+.stack-labels span.active{ color:var(--green-deep); font-weight:600; }
+
+/* ---------- Stackup breakdown cards ---------- */
+.stackup-grid{ display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); }
+.stackup-row{
+  display:grid; grid-template-columns:200px 1fr 1.3fr; gap:28px; background:var(--surface); padding:28px 26px; align-items:start;
+}
+@media (max-width:900px){ .stackup-row{ grid-template-columns:1fr; gap:18px; } }
+.stackup-row-head{ display:flex; flex-direction:column; gap:6px; }
+.stackup-row-head .layer-count{
+  font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:30px; color:var(--green-deep); line-height:1;
+}
+.stackup-row-head .layer-count .unit{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--muted); font-weight:400; margin-left:3px; }
+.stackup-row-head .hdi-badge{
+  display:inline-flex; align-self:flex-start; margin-top:6px; font-family:'IBM Plex Mono', monospace;
+  font-size:10.5px; letter-spacing:0.05em; color:var(--copper); border:1px solid var(--copper); border-radius:2px;
+  padding:3px 7px;
+}
+.stackup-visual{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:130px; padding:6px 0;
+}
+.stackup-layer{ width:100%; max-width:260px; border-radius:1px; position:relative; }
+.stackup-layer.copper{
+  background:linear-gradient(180deg, var(--copper-light), var(--copper)); height:7px;
+}
+.stackup-layer.dielectric{
+  background:var(--surface-alt); border:1px solid var(--line); height:11px;
+}
+.stackup-legend{ display:flex; gap:18px; margin-top:12px; flex-wrap:wrap; justify-content:center; }
+.stackup-legend span{ display:inline-flex; align-items:center; gap:6px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted); }
+.stackup-legend i{ width:12px; height:8px; display:inline-block; border-radius:1px; }
+.stackup-legend i.copper{ background:linear-gradient(180deg, var(--copper-light), var(--copper)); }
+.stackup-legend i.dielectric{ background:var(--surface-alt); border:1px solid var(--line); }
+.stackup-row-body h3{ font-size:16.5px; margin-bottom:8px; }
+.stackup-row-body p{ font-size:13.5px; color:var(--muted); margin:0 0 10px; }
+.stackup-row-body ul{ margin:0; padding-left:18px; font-size:13.5px; color:var(--muted); }
+.stackup-row-body li{ margin-bottom:4px; }
+
+/* ---------- Generic feature / spec grid ---------- */
+.feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+@media (max-width:900px){ .feature-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .feature-grid{grid-template-columns:1fr;} }
+.feature-card{ background:var(--surface); padding:26px 24px; position:relative; }
+.feature-card .card-corner{
+  position:absolute; top:0; left:0; width:16px; height:16px;
+  border-top:2px solid var(--copper); border-left:2px solid var(--copper);
+}
+.feature-card .f-num{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--copper); display:block; margin-bottom:10px; }
+.feature-card h3{ font-size:16.5px; margin-bottom:8px; }
+.feature-card p{ font-size:13.5px; color:var(--muted); margin:0; }
+
+/* ---------- Use case chip row ---------- */
+.chip-row{ display:flex; flex-wrap:wrap; gap:12px; }
+.chip{
+  font-family:'IBM Plex Mono', monospace; font-size:13.5px; padding:10px 18px;
+  border:1px solid var(--line); border-radius:20px; background:var(--surface); color:var(--ink);
+}
+
+/* ---------- Process flow (layout / assembly pages) ---------- */
+.flow-row{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
+.flow-step{
+  flex:1 1 160px; background:var(--surface); border:1px solid var(--line); padding:22px 18px; position:relative;
+  min-width:150px;
+}
+.flow-step + .flow-step::before{
+  content:"→"; position:absolute; left:-11px; top:50%; transform:translateY(-50%);
+  color:var(--copper); font-family:'IBM Plex Mono', monospace; font-size:16px; background:var(--bg);
+  width:20px; text-align:center;
+}
+@media (max-width:780px){
+  .flow-row{ flex-direction:column; }
+  .flow-step + .flow-step::before{ content:"↓"; left:50%; top:-14px; transform:translateX(-50%); }
+}
+.flow-step .f-step-num{ font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--copper); display:block; margin-bottom:8px; }
+.flow-step h3{ font-size:15px; margin-bottom:6px; }
+.flow-step p{ font-size:13px; color:var(--muted); margin:0; }
+
+/* ---------- Bend / hybrid schematic illustrations ---------- */
+.schematic{ display:flex; align-items:center; justify-content:center; padding:20px 0 6px; }
+.schematic-bend{
+  width:180px; height:70px; border-radius:0 0 60px 60px/0 0 60px 40px;
+  background:repeating-linear-gradient(100deg, var(--copper) 0 3px, var(--green) 3px 7px);
+  transform:rotate(-4deg);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+.schematic-hybrid{ display:flex; align-items:center; gap:0; }
+.schematic-hybrid .seg{ height:46px; }
+.schematic-hybrid .rigid{ width:64px; background:repeating-linear-gradient(to bottom, var(--copper) 0 3px, var(--green) 3px 8px); border-radius:2px; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06); }
+.schematic-hybrid .flex{ width:70px; height:20px; background:var(--green); border-radius:10px; opacity:.85; }
+.schematic-mcpcb{ display:flex; flex-direction:column; align-items:center; gap:3px; width:220px; }
+.schematic-mcpcb .layer{ width:100%; border-radius:1px; }
+.schematic-mcpcb .l-circuit{ height:8px; background:linear-gradient(180deg, var(--copper-light), var(--copper)); }
+.schematic-mcpcb .l-dielectric{ height:8px; background:var(--surface-alt); border:1px solid var(--line); }
+.schematic-mcpcb .l-base{ height:30px; background:linear-gradient(180deg, #B9C4BC, #7C8B82); border-radius:1px 1px 3px 3px; }
+.heat-arrows{ display:flex; justify-content:space-around; width:220px; margin-top:6px; }
+.heat-arrows span{ font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--copper); opacity:.7; }
+
+/* ---------- Footer / Contact (shared) ---------- */
+footer.contact{ background:var(--green-deep); color:#fff; padding:80px 0 32px; }
+.contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; margin-bottom:56px; }
+@media (max-width:860px){ .contact-grid{grid-template-columns:1fr; gap:44px;} }
+.contact-grid h2{ color:#fff; font-size:26px; margin-bottom:18px; }
+.contact-info p{ font-size:14.5px; color:rgba(255,255,255,0.78); margin:0 0 8px; }
+.contact-info .mono{ color:rgba(255,255,255,0.9); }
+.form-mock{ display:flex; flex-direction:column; gap:12px; }
+.form-mock input, .form-mock textarea{
+  width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.2);
+  border-radius:2px; padding:12px 14px; color:#fff; font-family:'IBM Plex Sans',sans-serif; font-size:14px;
+}
+.form-mock ::placeholder{ color:rgba(255,255,255,0.45); }
+.form-mock textarea{ resize:none; height:80px; }
+.form-mock .btn-primary{ background:var(--copper); align-self:flex-start; }
+.form-mock .btn-primary:hover{ background:var(--copper-light); }
+.foot-bottom{
+  border-top:1px solid rgba(255,255,255,0.15); padding-top:24px;
+  display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  font-size:12.5px; color:rgba(255,255,255,0.55); font-family:'IBM Plex Mono', monospace;
+}
+
+/* ---------- Flex layer construction (coverlay / polyimide) ---------- */
+.stackup-layer.coverlay{ background:var(--copper-light); opacity:.6; height:4px; border-radius:1px; }
+.stackup-layer.polyimide{ background:var(--green); opacity:.22; height:9px; border:1px solid var(--line); }
+
+/* ---------- Rigid-Flex combined zone diagram ---------- */
+.hybrid-stack{ display:flex; flex-direction:column; align-items:center; gap:8px; }
+.hybrid-zone{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+.hybrid-zone .zone-label{
+  font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.03em; color:var(--muted); text-align:center;
+}
+.hybrid-block-rigid{
+  width:190px; height:30px; border-radius:2px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);
+  background:repeating-linear-gradient(to bottom, var(--copper) 0 3px, var(--green) 3px 8px);
+}
+.hybrid-block-rigid.sm{ height:20px; }
+.hybrid-block-flex{
+  width:110px; height:12px; background:var(--green); border-radius:8px; opacity:.85;
+}
+.hybrid-block-flex.wide{ width:150px; height:16px; }
+
+/* ---------- Metal core cross-section ---------- */
+.mcpcb-cross{ display:flex; flex-direction:column; align-items:center; gap:3px; width:100%; max-width:230px; margin:0 auto; }
+.mcpcb-cross .layer{ width:100%; border-radius:1px; }
+.mcpcb-cross .l-circuit{ height:8px; background:linear-gradient(180deg, var(--copper-light), var(--copper)); }
+.mcpcb-cross .l-dielectric{ height:8px; background:var(--surface-alt); border:1px solid var(--line); }
+.mcpcb-cross .l-base{ height:28px; background:linear-gradient(180deg, #B9C4BC, #7C8B82); border-radius:1px 1px 3px 3px; }
+.mcpcb-cross .l-via{ position:relative; }
+.mcpcb-cross-labels{ display:flex; flex-direction:column; gap:3px; width:100%; max-width:230px; margin:8px auto 0; }
+.mcpcb-cross-labels span{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--muted); text-align:center; }
+.mini-heat-arrows{ display:flex; justify-content:center; gap:6px; margin-top:8px; }
+.mini-heat-arrows span{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--copper); opacity:.65; }
+
+/* ---------- Process step badge (layout / assembly rows) ---------- */
+.step-visual{ display:flex; align-items:center; justify-content:center; min-height:110px; }
+.step-badge{
+  width:62px; height:62px; border:2px solid var(--green-deep); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; flex:none;
+  font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:20px; color:var(--green-deep);
+  background:var(--surface);
+}
+
+/* ---------- Mini process flow (used inside hero visual panels) ---------- */
+.mini-flow{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; justify-content:center; }
+.mini-flow-step{
+  flex:1 1 auto; min-width:74px; text-align:center; padding:10px 6px; position:relative;
+}
+.mini-flow-step + .mini-flow-step::before{
+  content:"→"; position:absolute; left:-4px; top:16px; color:var(--copper); font-family:'IBM Plex Mono', monospace; font-size:13px;
+}
+.mini-flow-step .mf-num{ display:block; font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--copper); margin-bottom:4px; }
+.mini-flow-step .mf-label{ display:block; font-size:11.5px; color:var(--ink); font-weight:500; line-height:1.3; }
+
+/* ---------- Variant tab navigation (Rigid PCB 9-variant spec browser) ---------- */
+.variant-tabs{
+  display:flex; flex-wrap:wrap; gap:8px; padding:10px; background:var(--surface-alt);
+  border:1px solid var(--line); border-radius:2px; margin-bottom:36px; position:relative;
+}
+.variant-tabs::before, .variant-tabs::after{
+  content:""; position:absolute; width:10px; height:10px; border:1.4px solid var(--copper); opacity:.5;
+}
+.variant-tabs::before{ top:-1px; left:-1px; border-right:none; border-bottom:none; }
+.variant-tabs::after{ bottom:-1px; right:-1px; border-left:none; border-top:none; }
+.variant-tab{
+  font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:.03em; text-align:center;
+  background:transparent; border:1px solid transparent; border-radius:2px; padding:9px 14px;
+  color:var(--muted); cursor:pointer; transition:background .15s ease, color .15s ease, border-color .15s ease;
+  white-space:nowrap;
+}
+.variant-tab:hover{ background:var(--surface); color:var(--ink); }
+.variant-tab.active{ background:var(--green-deep); color:#fff; }
+.variant-tab .usecase-hint{ display:block; font-size:9px; opacity:.8; margin-top:3px; font-weight:400; letter-spacing:.02em; text-transform:uppercase; }
+
+.variant-panel{ display:none; }
+.variant-panel.active{ display:block; animation:fadeInUp .2s ease; }
+@keyframes fadeInUp{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+.variant-panel-head{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+.variant-panel-head h3{ font-size:22px; }
+.usecase-badge{
+  display:inline-flex; align-items:center; gap:5px; font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+  letter-spacing:.04em; color:var(--copper); border:1px solid var(--copper); border-radius:12px; padding:4px 12px;
+}
+.usecase-badge::before{ content:"\2731"; font-size:10px; }
+.variant-panel-sub{ font-size:13.5px; color:var(--muted); margin-bottom:26px; max-width:70ch; }
+
+.variant-panel-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:36px; align-items:start; }
+@media (max-width:860px){ .variant-panel-grid{ grid-template-columns:1fr; gap:24px; } }
+.variant-visual-box{
+  position:relative; background:var(--surface); border:1px solid var(--line); border-radius:4px;
+  padding:24px 20px 18px; text-align:center;
+}
+
+/* ---------- Spec table (real manufacturer data, presented plainly) ---------- */
+.spec-table-wrap .spec-eyebrow{
+  font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--copper); margin-bottom:10px;
+}
+.spec-table{ border:1px solid var(--line); border-radius:2px; overflow:hidden; background:var(--surface); }
+.spec-row{
+  display:grid; grid-template-columns:160px 1fr; gap:16px; padding:12px 16px;
+  border-bottom:1px solid var(--line);
+}
+.spec-row:last-child{ border-bottom:none; }
+.spec-row:nth-child(even){ background:var(--surface-alt); }
+.spec-label{
+  font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); letter-spacing:.02em;
+  align-self:start; padding-top:1px;
+}
+.spec-value{ font-size:13.5px; color:var(--ink); font-weight:500; }
+.spec-table-section{ margin-top:30px; padding-top:30px; border-top:1px solid var(--line); }
+.spec-table-section:first-child{ margin-top:0; padding-top:0; border-top:none; }
+
+/* ---------- Sales contact callout (layout / assembly pages) ---------- */
+.sales-cta{
+  margin-top:32px; padding:26px 28px; border:1px solid var(--line); border-left:3px solid var(--copper);
+  background:var(--surface); border-radius:2px; display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:20px;
+}
+.sales-cta p{ margin:0; font-size:14px; color:var(--muted); max-width:56ch; }
+.sales-cta strong{ color:var(--ink); }
+
+/* ---------- Related products ---------- */
+.related-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+@media (max-width:900px){ .related-grid{grid-template-columns:repeat(3,1fr);} }
+@media (max-width:640px){ .related-grid{grid-template-columns:repeat(2,1fr);} }
+.related-card{
+  background:var(--surface); padding:18px 16px; text-decoration:none; color:inherit; display:block;
+  transition:background .15s ease;
+}
+.related-card:hover{ background:var(--surface-alt); }
+.related-card .r-tag{ font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--copper); display:block; margin-bottom:8px; }
+.related-card h3{ font-size:13.5px; }
