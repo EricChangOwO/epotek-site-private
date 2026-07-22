@@ -208,6 +208,19 @@ footer.contact{
   .mobile-menu{ display:none !important; }
 }
 
+.stack-panel.stack-panel-image{
+  padding:0 !important;
+  overflow:hidden;
+}
+
+.stack-panel-image img{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:4 / 3;
+  object-fit:cover;
+}
+
 @media (max-width:640px){
   .wrap{ padding-left:18px !important; padding-right:18px !important; }
   .logo{ font-size:17px !important; gap:8px !important; }
