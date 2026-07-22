@@ -51,7 +51,7 @@
     });
 
     window.addEventListener('resize', function(){
-      if(window.innerWidth > 900) closeMenu(false);
+      if(window.innerWidth > 1180) closeMenu(false);
     });
 
     nav.querySelectorAll('.lang-btn').forEach(function(button){

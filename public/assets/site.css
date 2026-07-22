@@ -13,8 +13,17 @@
   gap:20px;
 }
 
+.logo,
+.nav-right{
+  flex:0 0 auto;
+}
+
 .nav-links{
   gap:clamp(18px,2.2vw,34px);
+}
+
+.nav-links a{
+  white-space:nowrap;
 }
 
 .mobile-menu{
@@ -128,7 +137,11 @@ footer.contact{
   .nav-links{ font-size:14px !important; }
 }
 
-@media (max-width:900px){
+@media (max-width:1360px){
+  html[lang="en"] .nav-tel{ display:none !important; }
+}
+
+@media (max-width:1180px){
   :root{ --nav-height:65px; }
 
   .nav-inner{ padding:12px 0 !important; }
@@ -169,7 +182,7 @@ footer.contact{
   .quality-grid{ gap:38px !important; }
 }
 
-@media (min-width:901px){
+@media (min-width:1181px){
   .nav-links{ display:flex !important; }
   .mobile-menu{ display:none !important; }
 }
