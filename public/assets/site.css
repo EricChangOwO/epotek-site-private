@@ -223,8 +223,8 @@ footer.contact{
 
 @media (max-width:640px){
   .wrap{ padding-left:18px !important; padding-right:18px !important; }
-  .logo{ font-size:17px !important; gap:8px !important; }
-  .logo-mark{ width:28px !important; height:28px !important; }
+  .logo{ font-size:21px !important; gap:10px !important; padding-left:4px !important; }
+  .logo-mark{ width:38px !important; height:auto !important; }
   .logo small{ display:none !important; }
   .nav-right{ gap:8px !important; }
   .lang-btn{ padding:6px 8px !important; }
