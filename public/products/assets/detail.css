@@ -176,6 +176,11 @@ a{color:inherit;}
   color:var(--muted); margin-bottom:20px; text-align:center;
 }
 .visual-caption{ text-align:center; font-size:12.5px; color:var(--muted); margin-top:16px; }
+.visual-panel .hero-board-photo{
+  display:block; width:100%; max-width:360px; max-height:300px; height:auto;
+  margin:4px auto 2px; object-fit:contain; background:#fff; border-radius:2px;
+  image-rendering:auto;
+}
 
 /* ---------- Section shell (shared) ---------- */
 section.block{ padding:76px 0; }
@@ -214,6 +219,9 @@ section.block.alt{ background:var(--surface-alt); }
   display:grid; grid-template-columns:200px 1fr 1.3fr; gap:28px; background:var(--surface); padding:28px 26px; align-items:start;
 }
 @media (max-width:900px){ .stackup-row{ grid-template-columns:1fr; gap:18px; } }
+/* Process / workflow rows (pcb-layout, pcb-assembly) have no middle visual column. */
+.stackup-grid.steps-grid .stackup-row{ grid-template-columns:200px 1fr; }
+@media (max-width:900px){ .stackup-grid.steps-grid .stackup-row{ grid-template-columns:1fr; } }
 .stackup-row-head{ display:flex; flex-direction:column; gap:6px; }
 .stackup-row-head .layer-count{
   font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:30px; color:var(--green-deep); line-height:1;
@@ -389,6 +397,31 @@ footer.contact{ background:var(--green-deep); color:#fff; padding:80px 0 32px; }
 .mini-flow-step .mf-num{ display:block; font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--copper); margin-bottom:4px; }
 .mini-flow-step .mf-label{ display:block; font-size:11.5px; color:var(--ink); font-weight:500; line-height:1.3; }
 
+/* ---------- Frameless, enlarged workflow hero (pcb-layout, pcb-assembly) ---------- */
+.visual-panel.flow-panel{
+  background:transparent; border:0; padding:8px 0 4px;
+}
+.visual-panel.flow-panel .c1,
+.visual-panel.flow-panel .c2,
+.visual-panel.flow-panel .c3,
+.visual-panel.flow-panel .c4{ display:none; }
+.visual-panel.flow-panel .visual-title{ font-size:13px; margin-bottom:26px; }
+.visual-panel.flow-panel .visual-caption{ font-size:13px; margin-top:22px; }
+.visual-panel.flow-panel .mini-flow{ gap:2px; flex-wrap:nowrap; }
+.visual-panel.flow-panel .mini-flow-step{ min-width:0; padding:12px 8px; }
+.visual-panel.flow-panel .mini-flow-step + .mini-flow-step::before{
+  font-size:16px; top:19px; left:-4px;
+}
+.visual-panel.flow-panel .mini-flow-step .mf-num{ font-size:12px; margin-bottom:6px; }
+.visual-panel.flow-panel .mini-flow-step .mf-label{ font-size:14px; line-height:1.35; white-space:nowrap; }
+/* Give the right side of the hero more room when it holds a flow panel. */
+.detail-hero-grid:has(.visual-panel.flow-panel){ grid-template-columns:1fr 1.25fr; }
+@media (max-width:900px){
+  .detail-hero-grid:has(.visual-panel.flow-panel){ grid-template-columns:1fr; }
+  .visual-panel.flow-panel .mini-flow{ flex-wrap:wrap; }
+  .visual-panel.flow-panel .mini-flow-step .mf-label{ white-space:normal; }
+}
+
 /* ---------- Variant tab navigation (Rigid PCB 9-variant spec browser) ---------- */
 .variant-tabs{
   display:flex; flex-wrap:wrap; gap:8px; padding:10px; background:var(--surface-alt);
@@ -427,6 +460,14 @@ footer.contact{ background:var(--green-deep); color:#fff; padding:80px 0 32px; }
 .variant-visual-box{
   position:relative; background:var(--surface); border:1px solid var(--line); border-radius:4px;
   padding:24px 20px 18px; text-align:center;
+}
+.variant-board-photo{
+  display:block; width:100%; height:auto; max-height:320px; object-fit:contain;
+  background:#fff; border-radius:2px;
+}
+.variant-visual-caption{
+  margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted);
 }
 
 /* ---------- Spec table (real manufacturer data, presented plainly) ---------- */
